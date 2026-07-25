@@ -27,11 +27,12 @@ jobs:
           cache: 'maven'
 
       - name: Run All Tests and Package (Unit, Integration, BDD Cucumber)
-        # -T 1C: build using 1 thread per CPU core in parallel
-        # -ntp: omit downloading logs to keep output clean and fast
-        run: mvn clean verify -T 1C -B -ntp
+        # We use 'tee' to capture the entire console log output to 'build.log'
+        # while still displaying it in real-time in the terminal.
+        run: |
+          mvn clean verify -T 1C -B -ntp 2>&1 | tee build.log
 
-      - name: Publish Detailed BDD Cucumber Test Report to GitHub Step Summary
+      - name: Publish Detailed BDD Cucumber Test Report and App Logs to GitHub Step Summary
         if: always()
         run: |
           echo "## 📊 BDD Cucumber Test Execution Report" >> $GITHUB_STEP_SUMMARY
@@ -75,6 +76,18 @@ jobs:
           echo "- **E** o histórico do pedido deve conter a mensagem de falha \`\"[FAILED]\"\` ✅" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "### 🪵 Build, Test & Package Console Logs (Spring Boot & BDD)" >> $GITHUB_STEP_SUMMARY
+          echo "Abaixo estão os logs completos de compilação, inicialização do Spring Boot, transições de estado Hibernate e BDD:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "<details><summary><b>Clique aqui para abrir os logs completos da aplicação</b></summary>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`log" >> $GITHUB_STEP_SUMMARY
+          # Filter out download/transfer lines if any, and append the last 1500 lines of compilation/execution logs
+          cat build.log | grep -v 'Download' | tail -n 1500 >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "</details>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "📥 *Você também pode baixar o relatório visual HTML interativo completo na seção **Artifacts** abaixo.*" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Visual BDD HTML Report
