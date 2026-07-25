@@ -93,7 +93,7 @@ Se ocorrer alguma falha de negócio ou exceção técnica durante a transição 
 
 ---
 
-## 🚀 Como Executar o Projeto
+## 🚀 Como Executar o Projeto Localmente
 
 ### Pré-requisitos
 *   **Java 21** instalado.
@@ -109,6 +109,48 @@ mvn clean test
 Como o banco de dados (H2 em memória) e o Spring Cloud AWS SQS estão configurados com mocks de teste por padrão para execução instantânea, você pode subir o servidor Spring Boot localmente na porta `8080` com o seguinte comando:
 ```bash
 mvn spring-boot:run
+```
+
+---
+
+## 🐳 Dockerização (Pronto para Produção)
+
+O projeto inclui um `Dockerfile` multi-stage otimizado para plataformas que suportam containers Docker e JVM (como Railway, Render, Koyeb, AWS, etc.):
+
+```bash
+# 1. Construir a imagem Docker localmente
+docker build -t execution-flow-service .
+
+# 2. Executar o container localmente
+docker run -p 8080:8080 execution-flow-service
+```
+
+---
+
+## 🚀 Guia de Implantação (Deployment Guide)
+
+Como a aplicação roda sobre uma JVM persistente e consome filas AWS SQS, ela deve ser hospedada em plataformas compatíveis com serviços de execução de longa duração.
+
+### 1. Plataformas Recomendadas (PaaS & IaaS)
+*   **Railway (Recomendado pela simplicidade):** Detecta automaticamente o `Dockerfile` do projeto e sobe a aplicação JVM 21 em segundos na porta `8080`.
+*   **Render (Web Service):** Suporta deploys nativos baseados em Docker. Basta conectar seu repositório Git e selecionar o tipo de serviço "Web Service".
+*   **Koyeb:** Plataforma de nuvem moderna focada em containers. Lê o `Dockerfile` e faz o deploy reativo com excelente custo-benefício.
+*   **AWS (ECS / App Runner / Elastic Beanstalk):** Para cenários de escala corporativa integrados nativamente com as filas SQS.
+
+### 2. Variáveis de Ambiente Necessárias em Produção
+Ao realizar o deploy em sua plataforma de nuvem escolhida, configure as seguintes variáveis de ambiente:
+
+```env
+# Banco de Dados (substitua o H2 em memória por seu PostgreSQL/MySQL se desejar)
+SPRING_DATASOURCE_URL=jdbc:postgresql://seu-host-db:5432/db_name
+SPRING_DATASOURCE_USERNAME=seu_usuario
+SPRING_DATASOURCE_PASSWORD=sua_senha
+
+# Configurações do AWS SQS de Produção
+SPRING_CLOUD_AWS_CREDENTIALS_ACCESS_KEY=SUA_AWS_ACCESS_KEY_ID
+SPRING_CLOUD_AWS_CREDENTIALS_SECRET_KEY=SUA_AWS_SECRET_ACCESS_KEY
+SPRING_CLOUD_AWS_REGION_STATIC=us-east-1
+APP_SQS_QUEUE_NAME=nome-da-sua-fila-sqs-producao
 ```
 
 ---
