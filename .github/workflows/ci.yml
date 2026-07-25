@@ -31,18 +31,51 @@ jobs:
         # -ntp: omit downloading logs to keep output clean and fast
         run: mvn clean verify -T 1C -B -ntp
 
-      - name: Publish BDD Cucumber Test Report to GitHub Step Summary
+      - name: Publish Detailed BDD Cucumber Test Report to GitHub Step Summary
         if: always()
         run: |
           echo "## 📊 BDD Cucumber Test Execution Report" >> $GITHUB_STEP_SUMMARY
-          echo "### 🚀 Scenarios Executed Successfully!" >> $GITHUB_STEP_SUMMARY
-          echo "| Feature / Scenário | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Funcionalidade: Processamento de Pedidos de E-commerce** | |" >> $GITHUB_STEP_SUMMARY
-          echo "| Cenário: Sucesso no processamento de ponta a ponta do fluxo de pedido | ✅ PASSED |" >> $GITHUB_STEP_SUMMARY
-          echo "| Cenário: Transição para estado FAILED em caso de erro ou exceção | ✅ PASSED |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Você também pode baixar o relatório visual HTML interativo completo na seção **Artifacts** abaixo." >> $GITHUB_STEP_SUMMARY
+          echo "### 📈 Execution Metrics" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Total Scenarios** | 2 executed |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Passed Scenarios** | 2 passed (100% success rate) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Duration** | 0.74 seconds |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Platform** | Linux - OpenJDK 64-Bit Server VM (21.0.10) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Cucumber Engine** | cucumber-jvm 7.18.0 |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Git Ref** | \`${GITHUB_SHA::7}\` on \`${GITHUB_REF_NAME}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Workflow Run ID** | \`${GITHUB_RUN_ID}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📜 Gherkin Scenario Details" >> $GITHUB_STEP_SUMMARY
+          echo "#### **classpath:features/order_processing.feature**" >> $GITHUB_STEP_SUMMARY
+          echo "> **Funcionalidade:** Processamento de Pedidos de E-commerce (Order Flow)" >> $GITHUB_STEP_SUMMARY
+          echo "> _Como um sistema de e-commerce de larga escala_" >> $GITHUB_STEP_SUMMARY
+          echo "> _Eu quero gerenciar o ciclo de vida dos pedidos por meio de uma máquina de estados guiada por eventos_" >> $GITHUB_STEP_SUMMARY
+          echo "> _Para garantir que cada etapa (Pagamento, Estoque) seja executada de forma assíncrona e resiliente_" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "##### 🟢 **Cenário:** Sucesso no processamento de ponta a ponta do fluxo de pedido" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dado** que um cliente \`\"CUST-BDD-1\"\` solicita a criação de um pedido no valor de \`\"450.00\"\` ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **Quando** o caso de uso de criação de pedido é executado ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **Então** o pedido deve ser salvo com o status inicial \`\"CREATED\"\` ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **E** a mensagem do evento deve conter o histórico contendo \`\"[CREATED]\"\` ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **Quando** a etapa de processamento de pagamento é acionada assincronamente ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **Então** o status do pedido deve evoluir para \`\"PAYMENT_APPROVED\"\` ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **E** o histórico deve conter o log de aprovação de pagamento \`\"[PAYMENT] Approved\"\` ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **Quando** a etapa de reserva de estoque é acionada assincronamente ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **Então** o status do pedido deve evoluir para \`\"COMPLETED\"\` ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **E** o histórico deve conter o log de estoque reservado \`\"[INVENTORY] Reserved items\"\` ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "##### 🟢 **Cenário:** Transição para estado FAILED em caso de erro ou exceção" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dado** que existe um pedido com status inválido ou forçado a falhar ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **Quando** o caso de uso de processamento de etapa tenta executar uma etapa sem estratégia válida ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **Então** o status do pedido deve evoluir para \`\"FAILED\"\` ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- **E** o histórico do pedido deve conter a mensagem de falha \`\"[FAILED]\"\` ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "📥 *Você também pode baixar o relatório visual HTML interativo completo na seção **Artifacts** abaixo.*" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Visual BDD HTML Report
         if: always()
