@@ -155,6 +155,15 @@ APP_SQS_QUEUE_NAME=nome-da-sua-fila-sqs-producao
 
 ---
 
+## 📊 Relatórios de Testes BDD no GitHub Actions (CI)
+
+Os testes e as especificações BDD (Cucumber/Gherkin) são executados automaticamente a cada commit ou pull request em nosso pipeline de CI/CD:
+
+1. **Step Summary:** Um resumo visual do status das funcionalidades e cenários BDD executados é publicado diretamente no sumário da execução do workflow no GitHub Actions para visualização instantânea.
+2. **Download de Relatório HTML:** O relatório visual interativo completo do Cucumber (`cucumber.html`) é compactado e disponibilizado para download na seção **Artifacts** de cada execução do GitHub Actions.
+
+---
+
 ## 📬 Documentação da API REST
 
 Abaixo estão os comandos `curl` necessários para interagir com a aplicação:
@@ -207,14 +216,6 @@ curl -X GET http://localhost:8080/orders/e4f0a28b-b6fb-4560-b08e-8a7c29e47264
   "updatedAt": "2026-07-24T23:00:02.789"
 }
 ```
-
----
-
-### 3. Visualizar o Relatório Interativo BDD (`GET /orders/reports/bdd`)
-Após executar o comando de testes `mvn test`, você pode abrir o navegador e visualizar de forma interativa e visual o relatório em HTML completo gerado pelo Cucumber:
-
-**Acesso via Navegador:**
-`http://localhost:8080/orders/reports/bdd`
 
 ---
 

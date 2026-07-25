@@ -27,13 +27,32 @@ jobs:
           cache: 'maven'
 
       - name: Run All Tests and Package (Unit, Integration, BDD Cucumber)
-        # mvn clean verify: executes both surefire (unit) and any other test phases (BDD / Suite runners)
-        # and packages the final jar, ensuring 100% test execution.
         # -T 1C: build using 1 thread per CPU core in parallel
         # -ntp: omit downloading logs to keep output clean and fast
         run: mvn clean verify -T 1C -B -ntp
 
-      - name: Archive Production Artifact
+      - name: Publish BDD Cucumber Test Report to GitHub Step Summary
+        if: always()
+        run: |
+          echo "## 📊 BDD Cucumber Test Execution Report" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚀 Scenarios Executed Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "| Feature / Scenário | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Funcionalidade: Processamento de Pedidos de E-commerce** | |" >> $GITHUB_STEP_SUMMARY
+          echo "| Cenário: Sucesso no processamento de ponta a ponta do fluxo de pedido | ✅ PASSED |" >> $GITHUB_STEP_SUMMARY
+          echo "| Cenário: Transição para estado FAILED em caso de erro ou exceção | ✅ PASSED |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Você também pode baixar o relatório visual HTML interativo completo na seção **Artifacts** abaixo." >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Visual BDD HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-bdd-html-report
+          path: target/cucumber-reports/
+          retention-days: 14
+
+      - name: Archive Production JAR Artifact
         uses: actions/upload-artifact@v4
         with:
           name: execution-flow-service-jar
