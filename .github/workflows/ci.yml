@@ -26,10 +26,12 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Build, Test, and Package (Optimized Parallel Execution)
+      - name: Run All Tests and Package (Unit, Integration, BDD Cucumber)
+        # mvn clean verify: executes both surefire (unit) and any other test phases (BDD / Suite runners)
+        # and packages the final jar, ensuring 100% test execution.
         # -T 1C: build using 1 thread per CPU core in parallel
         # -ntp: omit downloading logs to keep output clean and fast
-        run: mvn clean package -T 1C -B -ntp
+        run: mvn clean verify -T 1C -B -ntp
 
       - name: Archive Production Artifact
         uses: actions/upload-artifact@v4
