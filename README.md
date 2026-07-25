@@ -1,6 +1,6 @@
 # 🏛️ Hexagonal Event-Driven Architecture (HEDA) - Order Execution Flow
 
-Este projeto é uma aplicação completa e funcional desenvolvida em **Java 21**, **Spring Boot 3.2.5** e baseada em **Arquitetura Limpa/Hexagonal**. Ele implementa uma máquina de estados robusta orientada a eventos, inspirada no padrão de orquestração de larga escala do **Netflix Conductor** (usando a raiz conceitual `com.empresa.execution`).
+Este projeto é uma aplicação completa e funcional desenvolvida em **Java 21**, **Spring Boot 3.2.5** e baseada em **Arquitetura Limpa/Hexagonal**. Ele implementa uma máquina de estados robusta orientada a eventos, inspirada no padrão de orquestração de larga escala do **Netflix Conductor** (usando a raiz conceitual `com.govinda777.execution`).
 
 O domínio funcional escolhido é o **Processamento de Pedidos de E-Commerce (Order Flow)**, onde os pedidos transitam por múltiplos estados de forma assíncrona utilizando filas **AWS SQS** para orquestração e transição segura de estados.
 
@@ -23,7 +23,7 @@ A aplicação segue rigorosamente as seguintes diretrizes de arquitetura:
 A organização das pastas respeita fielmente o diagrama arquitetural proposto:
 
 ```text
-src/main/java/com/empresa/execution/
+src/main/java/com/govinda777/execution/
 ├── business/                               # Core de Negócio (Java Puro)
 │   ├── domain/                             # Entidades e Enums puros do Domínio
 │   │   ├── OrderEntity.java                # Estado e histórico do pedido

@@ -6,9 +6,13 @@ on:
   pull_request:
     branches: [ main, master ]
 
+env:
+  # Speed up Maven JVM startup and execution
+  MAVEN_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+
 jobs:
   build-and-test:
-    name: Build and Test (JVM)
+    name: Build, Test & Package
     runs-on: ubuntu-latest
 
     steps:
@@ -22,11 +26,10 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Run Unit and Integration Tests
-        run: mvn clean test -B
-
-      - name: Package Application
-        run: mvn package -DskipTests -B
+      - name: Build, Test, and Package (Optimized Parallel Execution)
+        # -T 1C: build using 1 thread per CPU core in parallel
+        # -ntp: omit downloading logs to keep output clean and fast
+        run: mvn clean package -T 1C -B -ntp
 
       - name: Archive Production Artifact
         uses: actions/upload-artifact@v4
