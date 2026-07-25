@@ -99,8 +99,8 @@ Se ocorrer alguma falha de negócio ou exceção técnica durante a transição 
 *   **Java 21** instalado.
 *   **Maven 3.x** instalado.
 
-### 1. Compilar e Executar Testes
-Para garantir a conformidade arquitetural e testar todos os cenários (lógicas, uso dos gateways, controladores e deserializações), execute:
+### 1. Compilar e Executar Testes (incluindo testes de BDD Cucumber)
+Para garantir a conformidade arquitetural e rodar as 18 especificações de testes (unitários, integração e BDD), execute:
 ```bash
 mvn clean test
 ```
@@ -207,6 +207,14 @@ curl -X GET http://localhost:8080/orders/e4f0a28b-b6fb-4560-b08e-8a7c29e47264
   "updatedAt": "2026-07-24T23:00:02.789"
 }
 ```
+
+---
+
+### 3. Visualizar o Relatório Interativo BDD (`GET /orders/reports/bdd`)
+Após executar o comando de testes `mvn test`, você pode abrir o navegador e visualizar de forma interativa e visual o relatório em HTML completo gerado pelo Cucumber:
+
+**Acesso via Navegador:**
+`http://localhost:8080/orders/reports/bdd`
 
 ---
 
